@@ -1,14 +1,10 @@
 package cn.robotium;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.text.DecimalFormat;
 
+import android.net.TrafficStats;
 import cn.robotium.bean.TestRecordBean;
 import cn.robotium.utils.Sleeper;
-
-import android.os.SystemClock;
 
 public class NetInfo {
 	private int uid;
@@ -41,20 +37,8 @@ public class NetInfo {
 	}
 	
 	public void getNetInfo(){
-		String appNetRcvPath = "/proc/uid_stat/" + uid +"/tcp_rcv";
-		String appNetSndPath = "/proc/uid_stat/" + uid +"/tcp_snd";
-		try {
-			RandomAccessFile fileRcv = new RandomAccessFile(appNetRcvPath, "r");
-			RandomAccessFile fileSnd = new RandomAccessFile(appNetSndPath, "r");
-			tcp_rcv = Long.parseLong(fileRcv.readLine().toString());
-			tcp_snd = Long.parseLong(fileSnd.readLine().toString());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		tcp_rcv = TrafficStats.getUidRxBytes(uid);
+		tcp_snd = TrafficStats.getUidTxBytes(uid);
 		tracffic = tcp_rcv + tcp_snd;
 	}
 	
